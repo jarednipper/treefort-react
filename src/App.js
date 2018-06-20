@@ -21,12 +21,16 @@ class App extends React.Component {
   }
 
   renderEvent(props) {
-    var eventId = props.match.params.eventId;
-    var event = eventData.body.find((e) => { return e.id === eventId });
+    const eventId = props.match.params.eventId;
+    const event = eventData.body.find((e) => { return e.id === eventId });
+    const performerIds = event.performers.map((p) => { return p.id });
 
-    return <Performer
+    var performers = performerData.body.filter((p) => { return performerIds.includes(p.id) })
+
+    return <Event
       {...props}
       event={event}
+      performers={performers}
     />
   }
 
@@ -61,17 +65,23 @@ const NoRouteMatch = () => (
   <div>your url is bad and you should feel bad.</div>
 )
 
-class Performer extends React.Component {
+class Event extends React.Component {
   render() {
     return (
       <div>
         <ul>
           <li>{this.props.event.name}</li>
-          {
-            this.props.event.performers.map((p) => {
-              return <li key={p.id}>{p.name}</li>;
-            })
-          }
+          <li>{this.props.event.start_time} - {this.props.event.end_time}</li>
+          <li>{this.props.event.venue.name}</li>
+          <li>{this.props.event.venue.street}</li>
+          <li>{this.props.event.forts[0].name}</li>
+          <li>{this.props.event.suggested_age}</li>
+          <li><b>Performers:</b></li>
+          {this.props.performers.map((p) => {
+            return <li key={p.id}>{p.name}</li>
+          })}
+
+
         </ul>
       </div>
     )
@@ -189,7 +199,7 @@ class EventTable extends React.Component {
 
 const EventRow = ({ event }) => (
   <tr>
-    <td><a href={`events/${event.id}`}>{event.name}</a></td>
+    <td><a href={`event/${event.id}`}>{event.name}</a></td>
     <td>{event.start_time}</td>
     <td>{event.venue.name}</td>
   </tr >
