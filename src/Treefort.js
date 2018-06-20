@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import 'bulma/css/bulma.css'
 
 /**
 
@@ -57,15 +58,17 @@ class Treefort extends React.Component {
 
   render() {
     return (
-      <div>
-        <Search
-          onArtistInputChange={this.handleArtistInputChange}
-          artistInputText={this.state.artistInputText}
-        />
-        <EventTable
-          events={this.props.eventData}
-          artistInputText={this.state.artistInputText}
-        />
+      <div class="section">
+        <div class="container">
+          <Search
+            onArtistInputChange={this.handleArtistInputChange}
+            artistInputText={this.state.artistInputText}
+          />
+          <EventTable
+            events={this.props.eventData}
+            artistInputText={this.state.artistInputText}
+          />
+        </div>
       </div>
     )
   }
@@ -95,12 +98,18 @@ class ArtistInput extends React.Component {
 
   render() {
     return (
-      <input
-        type="text"
-        placeholder="Artist"
-        value={this.props.artistInputText}
-        onChange={this.handleArtistInputChange}
-      />
+      <div class="field">
+        <label class="label">Artist</label>
+        <div class="control">
+          <input
+            type="text"
+            placeholder="Artist"
+            value={this.props.artistInputText}
+            onChange={this.handleArtistInputChange}
+            class="input"
+          />
+        </div>
+      </div>
     )
   }
 }
@@ -133,7 +142,7 @@ class EventTable extends React.Component {
     });
 
     return (
-      <table border="1">
+      <table class="table is-fullwidth is-hoverable">
         <thead>
           <tr>
             <th>Artist</th>
