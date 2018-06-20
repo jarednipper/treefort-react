@@ -1,41 +1,65 @@
 import React from 'react';
-import './App.css';
+import { Route } from 'react-router-dom';
 import 'bulma/css/bulma.css'
 
-/**
+// temp cache
+import eventData from './data/events.json'
+import performerData from './data/performers.json'
+import venueData from './data/venues.json'
 
- |-Treefort----------------------------|
- |                                     |
- |  |-Search----------------------|    |
- |  |                             |    |
- |  |   |-ArtistInput---------|   |    |
- |  |   |                     |   |    |
- |  |   |---------------------|   |    |
- |  |                             |    |
- |  |-----------------------------|    |
- |                                     |
- |  |-EventTable------------------|    |
- |  |                             |    |
- |  |   |-EventRow------------|   |    |
- |  |   |                     |   |    |
- |  |   |---------------------|   |    |
- |  |                             |    |
- |  |   |-EventRow------------|   |    |
- |  |   |                     |   |    |
- |  |   |---------------------|   |    |
- |  |                             |    |
- |  |-----------------------------|    |
- |                                     |
- |-------------------------------------|
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <Route
+          path="/"
+          exact={true}
+          render={(props) =>
+            <Treefort
+              {...props}
+              eventData={eventData.body}
+              performerData={performerData.body}
+              venueData={venueData.body}
+            />
+          }
+        />
+        <Route
+          path="/event/:performerId"
+          render={(props) =>
+            <Performer
+              {...props}
+              eventData={eventData.body}
+              performerData={performerData.body}
+              venueData={venueData.body}
+            />
+          }
+        />
+      </div>
+    );
+  }
+}
 
-*/
+class Performer extends React.Component {
+  constructor(props) {
+    super(props);
 
+    var performerId = props.match.params.performerId;
+    this.performer = props.performerData.find((performer) => { return performer.id === performerId });
+  }
+  render() {
+    return (
+      <div>
+        {this.performer.name}
+      </div>
+    )
+  }
+}
 
 class Treefort extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      artistInputText: '',
+      artistInputText: window.localStorage.getItem('artistInputText') || '',
     };
 
     this.handleArtistInputChange = this.handleArtistInputChange.bind(this);
@@ -43,6 +67,7 @@ class Treefort extends React.Component {
 
   handleArtistInputChange(input) {
     this.setState({ artistInputText: input });
+    window.localStorage.setItem('artistInputText', input);
   }
 
   componentDidMount() {
@@ -58,8 +83,8 @@ class Treefort extends React.Component {
 
   render() {
     return (
-      <div class="section">
-        <div class="container">
+      <div className="section">
+        <div className="container">
           <Search
             onArtistInputChange={this.handleArtistInputChange}
             artistInputText={this.state.artistInputText}
@@ -98,15 +123,15 @@ class ArtistInput extends React.Component {
 
   render() {
     return (
-      <div class="field">
-        <label class="label">Artist</label>
-        <div class="control">
+      <div className="field">
+        <label className="label">Artist</label>
+        <div className="control">
           <input
             type="text"
             placeholder="Artist"
             value={this.props.artistInputText}
             onChange={this.handleArtistInputChange}
-            class="input"
+            className="input"
           />
         </div>
       </div>
@@ -138,11 +163,11 @@ class EventTable extends React.Component {
   render() {
     var rows = [];
     this.events().forEach((event) => {
-      rows.push(<EventRow event={event} />);
+      rows.push(<EventRow key={event.id} event={event} />);
     });
 
     return (
-      <table class="table is-fullwidth is-hoverable">
+      <table className="table is-fullwidth is-hoverable">
         <thead>
           <tr>
             <th>Artist</th>
@@ -171,4 +196,4 @@ class EventRow extends React.Component {
   }
 }
 
-export default Treefort;
+export default App;
