@@ -8,67 +8,6 @@ import performerData from './data/performers.json'
 import venueData from './data/venues.json'
 
 class App extends React.Component {
-  render() {
-    return (
-      <div>
-        <Route
-          path="/"
-          exact={true}
-          render={(props) =>
-            <Treefort
-              {...props}
-              eventData={eventData.body}
-              performerData={performerData.body}
-              venueData={venueData.body}
-            />
-          }
-        />
-        <Route
-          path="/event/:performerId"
-          render={(props) =>
-            <Performer
-              {...props}
-              eventData={eventData.body}
-              performerData={performerData.body}
-              venueData={venueData.body}
-            />
-          }
-        />
-      </div>
-    );
-  }
-}
-
-class Performer extends React.Component {
-  constructor(props) {
-    super(props);
-
-    var performerId = props.match.params.performerId;
-    this.performer = props.performerData.find((performer) => { return performer.id === performerId });
-  }
-  render() {
-    return (
-      <div>
-        {this.performer.name}
-      </div>
-    )
-  }
-}
-
-class Treefort extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      artistInputText: window.localStorage.getItem('artistInputText') || '',
-    };
-
-    this.handleArtistInputChange = this.handleArtistInputChange.bind(this);
-  }
-
-  handleArtistInputChange(input) {
-    this.setState({ artistInputText: input });
-    window.localStorage.setItem('artistInputText', input);
-  }
 
   componentDidMount() {
     //this.fetchEvents()
@@ -81,17 +20,85 @@ class Treefort extends React.Component {
     //  });
   }
 
+  renderEvent(props) {
+    console.log('here');
+    var eventId = props.match.params.eventId;
+    var event = eventData.body.find((e) => { return e.id === eventId });
+
+    return <Performer
+      {...props}
+      event={event}
+    />
+  }
+
+  render() {
+    return (
+      <div>
+        <Route
+          path="/"
+          exact={true}
+          render={(props) =>
+            <FilterableEventTable
+              {...props}
+              eventData={eventData.body}
+              performerData={performerData.body}
+              venueData={venueData.body}
+            />
+          }
+        />
+        <Route
+          path="/event/:eventId"
+          render={(props) => this.renderEvent(props)}
+        />
+      </div>
+    );
+  }
+}
+
+class Performer extends React.Component {
+  render() {
+    return (
+      <div>
+        <ul>
+          <li>{this.props.event.name}</li>
+          {
+            this.props.event.performers.map((p) => {
+              return <li key={p.id}>{p.name}</li>;
+            })
+          }
+        </ul>
+      </div>
+    )
+  }
+
+}
+
+class FilterableEventTable extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      eventInputText: window.localStorage.getItem('eventInputText') || '',
+    };
+
+    this.handleEventInputChange = this.handleEventInputChange.bind(this);
+  }
+
+  handleEventInputChange(input) {
+    this.setState({ eventInputText: input });
+    window.localStorage.setItem('eventInputText', input);
+  }
+
   render() {
     return (
       <div className="section">
         <div className="container">
           <Search
-            onArtistInputChange={this.handleArtistInputChange}
-            artistInputText={this.state.artistInputText}
+            onEventInputChange={this.handleEventInputChange}
+            eventInputText={this.state.eventInputText}
           />
           <EventTable
             events={this.props.eventData}
-            artistInputText={this.state.artistInputText}
+            eventInputText={this.state.eventInputText}
           />
         </div>
       </div>
@@ -99,38 +106,33 @@ class Treefort extends React.Component {
   }
 }
 
-class Search extends React.Component {
-  render() {
-    return (
-      <ArtistInput
-        onArtistInputChange={this.props.onArtistInputChange}
-        artistInputText={this.props.artistInputText}
-      />
-    )
-  }
-}
+const Search = ({ onEventInputChange, eventInputText }) => (
+  <EventInput
+    onEventInputChange={onEventInputChange}
+    eventInputText={eventInputText}
+  />
+);
 
-class ArtistInput extends React.Component {
-
+class EventInput extends React.Component {
   constructor(props) {
     super(props);
-    this.handleArtistInputChange = this.handleArtistInputChange.bind(this);
+    this.handleEventInputChange = this.handleEventInputChange.bind(this);
   }
 
-  handleArtistInputChange(e) {
-    this.props.onArtistInputChange(e.target.value)
+  handleEventInputChange(e) {
+    this.props.onEventInputChange(e.target.value)
   }
 
   render() {
     return (
       <div className="field">
-        <label className="label">Artist</label>
+        <label className="label">Event</label>
         <div className="control">
           <input
             type="text"
-            placeholder="Artist"
-            value={this.props.artistInputText}
-            onChange={this.handleArtistInputChange}
+            placeholder="Search Events"
+            value={this.props.eventInputText}
+            onChange={this.handleEventInputChange}
             className="input"
           />
         </div>
@@ -140,15 +142,11 @@ class ArtistInput extends React.Component {
 }
 
 class EventTable extends React.Component {
-
   events() {
     var events = this.props.events;
 
-    if (this.props.artistInputText.length > 0) {
-      events = events.filter((event) => {
-        return event.performers.length > 0 &&
-          event.performers[0].name.toLowerCase().includes(this.props.artistInputText.toLowerCase())
-      });
+    if (this.props.eventInputText.length > 0) {
+      events = events.filter((event) => { return event.name.toLowerCase().match(this.props.eventInputText.toLowerCase()); })
     }
 
     events = events.filter((event) => {
@@ -170,7 +168,7 @@ class EventTable extends React.Component {
       <table className="table is-fullwidth is-hoverable">
         <thead>
           <tr>
-            <th>Artist</th>
+            <th>Name</th>
             <th>Time</th>
             <th>Venue</th>
           </tr>
@@ -183,17 +181,12 @@ class EventTable extends React.Component {
   }
 }
 
-class EventRow extends React.Component {
-  render() {
-    var performers = this.props.event.performers.map((p) => { return p.name }).join(', ');
-    return (
-      <tr>
-        <td>{performers}</td>
-        <td>{this.props.event.start_time}</td>
-        <td>{this.props.event.venue.name}</td>
-      </tr>
-    )
-  }
-}
+const EventRow = ({ event }) => (
+  <tr>
+    <td><a href={`events/${event.id}`}>{event.name}</a></td>
+    <td>{event.start_time}</td>
+    <td>{event.venue.name}</td>
+  </tr >
+);
 
 export default App;
