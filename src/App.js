@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import 'bulma/css/bulma.css'
 
 // temp cache
@@ -21,7 +21,6 @@ class App extends React.Component {
   }
 
   renderEvent(props) {
-    console.log('here');
     var eventId = props.match.params.eventId;
     var event = eventData.body.find((e) => { return e.id === eventId });
 
@@ -34,26 +33,33 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Route
-          path="/"
-          exact={true}
-          render={(props) =>
-            <FilterableEventTable
-              {...props}
-              eventData={eventData.body}
-              performerData={performerData.body}
-              venueData={venueData.body}
-            />
-          }
-        />
-        <Route
-          path="/event/:eventId"
-          render={(props) => this.renderEvent(props)}
-        />
+        <Switch>
+          <Route
+            path="/"
+            exact={true}
+            render={(props) =>
+              <FilterableEventTable
+                {...props}
+                eventData={eventData.body}
+                performerData={performerData.body}
+                venueData={venueData.body}
+              />
+            }
+          />
+          <Route
+            path="/event/:eventId"
+            render={(props) => this.renderEvent(props)}
+          />
+          <Route component={NoRouteMatch} />
+        </Switch>
       </div>
     );
   }
 }
+
+const NoRouteMatch = () => (
+  <div>your url is bad and you should feel bad.</div>
+)
 
 class Performer extends React.Component {
   render() {
