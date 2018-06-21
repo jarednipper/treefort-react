@@ -1,20 +1,20 @@
 import React from 'react';
 
-const Search = ({ onEventInputChange, eventInputText, genres, onGenreInputChange, genreInputValue, venues, onVenueInputChange, venueInputValue }) => (
+const Search = (props) => (
   <div>
     <EventInput
-      onEventInputChange={onEventInputChange}
-      eventInputText={eventInputText}
+      onEventInputChange={props.onEventInputChange}
+      eventInputText={props.eventInputText}
     />
     <GenreInput
-      genres={genres}
-      onGenreInputChange={onGenreInputChange}
-      genreInputValue={genreInputValue}
+      genres={props.genres}
+      onGenreInputChange={props.onGenreInputChange}
+      genreInputValue={props.genreInputValue}
     />
     <VenueInput
-      venues={venues}
-      onVenueInputChange={onVenueInputChange}
-      venueInputValue={venueInputValue}
+      venues={props.venues}
+      onVenueInputChange={props.onVenueInputChange}
+      venueInputValue={props.venueInputValue}
     />
   </div>
 );

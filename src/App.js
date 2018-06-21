@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import 'bulma/css/bulma.css';
 
 import Event from './Event.js';
@@ -25,10 +25,10 @@ class App extends React.Component {
 
   renderEvent(props) {
     const eventId = props.match.params.eventId;
-    const event = eventData.body.find((e) => { return e.id === eventId });
-    const performerIds = event.performers.map((p) => { return p.id });
+    const event = eventData.body.find(e => e.id === eventId);
+    const performerIds = event.performers.map(p => p.id);
 
-    var performers = performerData.body.filter((p) => { return performerIds.includes(p.id) })
+    var performers = performerData.body.filter(p => performerIds.includes(p.id))
 
     return <Event
       {...props}
@@ -39,7 +39,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <Router>
         <Switch>
           <Route
             path="/"
@@ -59,7 +59,7 @@ class App extends React.Component {
           />
           <Route component={NoRouteMatch} />
         </Switch>
-      </div>
+      </Router>
     );
   }
 }

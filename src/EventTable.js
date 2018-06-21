@@ -35,19 +35,12 @@ class EventTable extends React.Component {
 
   render() {
     var rows = [];
-    this.events().forEach((event) => {
+    this.events().forEach(event => {
       rows.push(<EventRow key={event.id} event={event} />);
     });
 
     return (
       <table className="table is-fullwidth is-hoverable">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Time</th>
-            <th>Venue</th>
-          </tr>
-        </thead>
         <tbody>
           {rows}
         </tbody>
@@ -56,11 +49,11 @@ class EventTable extends React.Component {
   }
 }
 
-const EventRow = ({ event }) => (
+const EventRow = (props) => (
   <tr>
-    <td><a href={`event/${event.id}`}>{event.name}</a></td>
-    <td>{event.start_time}</td>
-    <td>{event.venue.name}</td>
+    <td><a href={`event/${props.event.id}`}>{props.event.name}</a></td>
+    <td>{props.event.start_time}</td>
+    <td>{props.event.venue.name}</td>
   </tr>
 );
 

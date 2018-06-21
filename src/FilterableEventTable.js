@@ -16,17 +16,17 @@ class FilterableEventTable extends React.Component {
     this.handleVenueInputChange = this.handleVenueInputChange.bind(this);
   }
 
-  handleEventInputChange(input) {
+  handleEventInputChange = (input) => {
     this.setState({ eventInputText: input });
     window.localStorage.setItem('eventInputText', input);
   }
 
-  handleGenreInputChange(input) {
+  handleGenreInputChange = (input) => {
     this.setState({ genreInputValue: input });
     window.localStorage.setItem('genreInputValue', input);
   }
 
-  handleVenueInputChange(input) {
+  handleVenueInputChange = (input) => {
     this.setState({ venueInputValue: input });
     window.localStorage.setItem('venueInputValue', input);
   }
