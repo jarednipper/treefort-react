@@ -41,6 +41,10 @@ class Event extends React.Component {
               : null}
           </div>
 
+          {/*
+            TODO:  ReactPlayer.canPlay(url)
+            TODO: Make responsive https://www.npmjs.com/package/react-player#responsive-player
+          */}
           <div>
             {this.props.performers[0].video_url
               ? <ReactPlayer url={this.props.performers[0].video_url} controls={true} />
