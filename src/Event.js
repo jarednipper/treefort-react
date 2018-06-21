@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactPlayer from 'react-player'
 
 class Event extends React.Component {
   render() {
@@ -7,7 +8,7 @@ class Event extends React.Component {
     // TODO handle no performers - event id 2018-0-Treefort
 
     const forts = this.props.event.forts.map(f => {
-      return <li>{f}</li>
+      return <li key={f}>{f}</li>
     });
 
     return (
@@ -42,7 +43,7 @@ class Event extends React.Component {
 
           <div>
             {this.props.performers[0].video_url
-              ? <p><a href={this.props.performers[0].video_url} target='_new'>Watch Video</a></p>
+              ? <ReactPlayer url={this.props.performers[0].video_url} controls={true} />
               : null
             }
           </div>
