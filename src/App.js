@@ -11,6 +11,28 @@ import performerData from './data/performers.json'
 import venueData from './data/venues.json'
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mySavedEvents: window.localStorage.getItem('mySavedEvents') ? JSON.parse(window.localStorage.getItem('mySavedEvents')) : [],
+    };
+
+    this.handleAddSavedEvent = this.handleAddSavedEvent.bind(this);
+    this.handleRemoveSavedEvent = this.handleRemoveSavedEvent.bind(this);
+  }
+
+  handleAddSavedEvent = (input) => {
+    var mySavedEvents = this.state.mySavedEvents
+    mySavedEvents.push(input);
+    this.setState({ mySavedEvents: mySavedEvents });
+    window.localStorage.setItem('mySavedEvents', JSON.stringify(mySavedEvents));
+  }
+
+  handleRemoveSavedEvent = (input) => {
+    const newState = this.state.mySavedEvents.filter(e => e !== input);
+    this.setState({ mySavedEvents: newState });
+    window.localStorage.setItem('mySavedEvents', JSON.stringify(newState));
+  }
 
   componentDidMount() {
     //this.fetchEvents()
@@ -50,6 +72,7 @@ class App extends React.Component {
                 eventData={eventData.body}
                 performerData={performerData.body}
                 venueData={venueData.body}
+                mySavedEvents={this.state.mySavedEvents}
               />
             }
           />

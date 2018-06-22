@@ -9,11 +9,13 @@ class FilterableEventTable extends React.Component {
       eventInputText: window.localStorage.getItem('eventInputText') || '',
       genreInputValue: window.localStorage.getItem('genreInputValue') || '',
       venueInputValue: window.localStorage.getItem('venueInputValue') || '',
+      fortInputValue: window.localStorage.getItem('fortInputValue') || '',
     };
 
     this.handleEventInputChange = this.handleEventInputChange.bind(this);
     this.handleGenreInputChange = this.handleGenreInputChange.bind(this);
     this.handleVenueInputChange = this.handleVenueInputChange.bind(this);
+    this.handleFortInputChange = this.handleFortInputChange.bind(this);
   }
 
   handleEventInputChange = (input) => {
@@ -31,12 +33,24 @@ class FilterableEventTable extends React.Component {
     window.localStorage.setItem('venueInputValue', input);
   }
 
+  handleFortInputChange = (input) => {
+    this.setState({ fortInputValue: input });
+    window.localStorage.setItem('fortInputValue', input);
+  }
+
   render() {
 
     const genres = [...new Set(
       this.props.performerData
         .filter(p => p.genres != null)
         .map(p => p.genres)
+        .reduce((flat, toFlatten) => flat.concat(toFlatten), [])
+    )].sort();
+
+    const forts = [...new Set(
+      this.props.eventData
+        .filter(e => e.forts != null)
+        .map(e => e.forts)
         .reduce((flat, toFlatten) => flat.concat(toFlatten), [])
     )].sort();
 
@@ -57,6 +71,10 @@ class FilterableEventTable extends React.Component {
             venues={venues}
             onVenueInputChange={this.handleVenueInputChange}
             venueInputValue={this.state.venueInputValue}
+
+            forts={forts}
+            onFortInputChange={this.handleFortInputChange}
+            fortInputValue={this.state.fortInputValue}
           />
           <EventTable
             events={this.props.eventData}
@@ -64,6 +82,8 @@ class FilterableEventTable extends React.Component {
             eventInputText={this.state.eventInputText}
             genreInputValue={this.state.genreInputValue}
             venueInputValue={this.state.venueInputValue}
+            fortInputValue={this.state.fortInputValue}
+            mySavedEvents={this.props.mySavedEvents}
           />
         </div>
       </div>

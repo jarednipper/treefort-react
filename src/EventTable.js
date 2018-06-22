@@ -20,11 +20,14 @@ class EventTable extends React.Component {
     }
 
     // filter venues
-    if (this.props.venueInputValue.length > 0) {
+    if (this.props.venueInputValue.length) {
       events = events.filter(e => e.venue.name === this.props.venueInputValue);
     }
 
-    // filter forts ?
+    // filter forts
+    if (this.props.fortInputValue.length) {
+      events = events.filter(e => e.forts.includes(this.props.fortInputValue));
+    }
 
     //sort by time, then name
     events = events.sort((a, b) => {
@@ -58,8 +61,19 @@ class EventTable extends React.Component {
   render() {
     var rows = [];
     this.events().forEach(event => {
-      rows.push(<EventRow key={event.id} event={event} />);
+      rows.push(
+        <EventRow
+          key={event.id}
+          event={event}
+          mySavedEvent={this.props.mySavedEvents.includes(event.id)}
+        />
+      );
     });
+
+    // TODO improve this
+    if (rows.length < 1) {
+      rows.push(<tr key="none"><td>No events. Try changing the filters.</td></tr>)
+    }
 
     return (
       <table className="table is-fullwidth is-hoverable">
@@ -76,6 +90,7 @@ const EventRow = (props) => (
     <td><a href={`event/${props.event.id}`}>{props.event.name}</a></td>
     <td>{props.event.start_time}</td>
     <td>{props.event.venue.name}</td>
+    <td>{props.mySavedEvent ? 'saved' : 'not saved'}</td>
   </tr>
 );
 

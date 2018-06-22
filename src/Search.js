@@ -16,6 +16,11 @@ const Search = (props) => (
       onVenueInputChange={props.onVenueInputChange}
       venueInputValue={props.venueInputValue}
     />
+    <FortInput
+      forts={props.forts}
+      onFortInputChange={props.onFortInputChange}
+      fortInputValue={props.fortInputValue}
+    />
   </div>
 );
 
@@ -84,7 +89,6 @@ class EventInput extends React.Component {
   render() {
     return (
       <div className="field">
-        <label className="label">Event</label>
         <div className="control">
           <input
             type="text"
@@ -94,6 +98,32 @@ class EventInput extends React.Component {
             className="input"
           />
         </div>
+      </div>
+    )
+  }
+}
+
+class FortInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleFortInputChange = this.handleFortInputChange.bind(this);
+  }
+
+  handleFortInputChange(e) {
+    this.props.onFortInputChange(e.target.value)
+  }
+
+  render() {
+    const options = this.props.forts.map(e =>
+      <option value={e} key={e}>{e}</option>
+    );
+
+    return (
+      <div className="select">
+        <select onChange={this.handleFortInputChange} value={this.props.fortInputValue}>
+          <option value="">All Forts</option>
+          {options}
+        </select>
       </div>
     )
   }

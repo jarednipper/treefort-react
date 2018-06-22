@@ -7,6 +7,8 @@ class Event extends React.Component {
     // TODO Right now this only handles 1 performer (most cases) - figure out what to do with multiple - event id 2018-9137674-Treefort
     // TODO handle no performers - event id 2018-0-Treefort
 
+    // TODO probably split out different forts to better customize
+
     const forts = this.props.event.forts.map(f => {
       return <li key={f}>{f}</li>
     });
@@ -30,15 +32,19 @@ class Event extends React.Component {
             </li>
           </ul>
 
-          <img src={this.props.performers[0].image_url_med} alt='Performer' />
+          {this.props.performers[0].image_url_med ?
+            <img src={this.props.performers[0].image_url_med} alt='Performer' />
+            : null
+          }
 
           <div>
-            {this.props.performers[0].song
-              ? <audio controls>
+            {this.props.performers[0].song && this.props.performers[0].song.stream_url ?
+              <audio controls>
                 <source src={this.props.performers[0].song.stream_url} type="audio/mp3" />
                 <p><a href={this.props.performers[0].song.stream_url}>Listen</a></p>
               </audio>
-              : null}
+              : null
+            }
           </div>
 
           {/*
@@ -52,7 +58,7 @@ class Event extends React.Component {
             }
           </div>
 
-          <p>{this.props.performers[0].bio}</p>
+          <p>{this.props.performers[0].bio || this.props.event.description}</p>
           <p>TODO Genres</p>
 
         </div>
