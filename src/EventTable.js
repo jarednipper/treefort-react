@@ -60,7 +60,51 @@ class EventTable extends React.Component {
 
   render() {
     var rows = [];
+
+    const hourNames = {
+      0: 'Late',
+      1: 'Late',
+      2: 'Late',
+      3: 'Late',
+      4: 'Late',
+      5: 'Morning',
+      6: 'Morning',
+      7: 'Morning',
+      8: 'Morning',
+      9: 'Morning',
+      10: 'Morning',
+      11: 'Morning',
+      12: 'Afternoon',
+      13: 'Afternoon',
+      14: 'Afternoon',
+      15: 'Afternoon',
+      16: 'Afternoon',
+      17: 'Afternoon',
+      18: 'Evening',
+      19: 'Evening',
+      20: 'Evening',
+      21: 'Evening',
+      22: 'Evening',
+      23: 'Late',
+    };
+
+    var currentHourName = '';
+    var hourName = '';
+
     this.events().forEach(event => {
+
+      hourName = hourNames[new Date(event.start_time).getHours()];
+      if (hourName !== currentHourName) {
+        rows.push(
+          <TimeRow
+            key={`${event.id}-time`}
+            event={event}
+            hourName={hourName}
+          />
+        );
+        currentHourName = hourName;
+      }
+
       rows.push(
         <EventRow
           key={event.id}
@@ -84,6 +128,14 @@ class EventTable extends React.Component {
     )
   }
 }
+
+const TimeRow = (props) => (
+  <tr style={{ backgroundColor: 'gold' }}>
+    <td colSpan="4">
+      {props.event.start_time} {props.hourName}
+    </td>
+  </tr>
+)
 
 const EventRow = (props) => (
   <tr>
