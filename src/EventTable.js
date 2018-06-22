@@ -110,6 +110,8 @@ class EventTable extends React.Component {
           key={event.id}
           event={event}
           mySavedEvent={this.props.mySavedEvents.includes(event.id)}
+          onAddSavedEvent={this.props.onAddSavedEvent}
+          onRemoveSavedEvent={this.props.onRemoveSavedEvent}
         />
       );
     });
@@ -137,12 +139,30 @@ const TimeRow = (props) => (
   </tr>
 )
 
+const SavedEventSection = (props) => (
+  <td>
+    <input
+      type="checkbox"
+      checked={props.mySavedEvent}
+      onChange={(e) => e.target.checked
+        ? props.onAddSavedEvent(props.eventId)
+        : props.onRemoveSavedEvent(props.eventId)
+      }
+    />
+  </td>
+)
+
 const EventRow = (props) => (
   <tr>
     <td><a href={`event/${props.event.id}`}>{props.event.name}</a></td>
     <td>{props.event.start_time}</td>
     <td>{props.event.venue.name}</td>
     <td>{props.mySavedEvent ? 'saved' : 'not saved'}</td>
+    <SavedEventSection
+      onAddSavedEvent={props.onAddSavedEvent}
+      onRemoveSavedEvent={props.onRemoveSavedEvent}
+      eventId={props.event.id}
+    />
   </tr>
 );
 

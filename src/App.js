@@ -73,6 +73,8 @@ class App extends React.Component {
                 performerData={performerData.body}
                 venueData={venueData.body}
                 mySavedEvents={this.state.mySavedEvents}
+                onAddSavedEvent={this.handleAddSavedEvent}
+                onRemoveSavedEvent={this.handleRemoveSavedEvent}
               />
             }
           />

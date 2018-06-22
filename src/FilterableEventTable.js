@@ -84,6 +84,8 @@ class FilterableEventTable extends React.Component {
             venueInputValue={this.state.venueInputValue}
             fortInputValue={this.state.fortInputValue}
             mySavedEvents={this.props.mySavedEvents}
+            onAddSavedEvent={this.props.onAddSavedEvent}
+            onRemoveSavedEvent={this.props.onRemoveSavedEvent}
           />
         </div>
       </div>
