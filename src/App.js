@@ -10,6 +10,18 @@ import eventData from './data/events.json'
 import performerData from './data/performers.json'
 import venueData from './data/venues.json'
 
+/*
+  TODO
+      hide/show past events
+      change table to styled UL
+      update <title> tags
+      search params in url for bookmarking, sharing
+      remove video embed, just link to it</li>
+      twitter_url, facebook_url, website_url, instagram_url -- icons
+      home_town
+
+*/
+
 class App extends React.Component {
   constructor(props) {
     super(props);

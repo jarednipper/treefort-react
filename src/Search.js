@@ -21,6 +21,10 @@ const Search = (props) => (
       onFortInputChange={props.onFortInputChange}
       fortInputValue={props.fortInputValue}
     />
+    <SavedEventsInput
+      onOnlySavedEventsChange={props.onOnlySavedEventsChange}
+      onlySavedEventsInputValue={props.onlySavedEventsInputValue}
+    />
   </div>
 );
 
@@ -123,6 +127,28 @@ class FortInput extends React.Component {
         <select onChange={this.handleFortInputChange} value={this.props.fortInputValue}>
           <option value="">All Forts</option>
           {options}
+        </select>
+      </div>
+    )
+  }
+}
+
+class SavedEventsInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleOnlySavedEventsInputChange = this.handleOnlySavedEventsInputChange.bind(this);
+  }
+
+  handleOnlySavedEventsInputChange(e) {
+    this.props.onOnlySavedEventsChange(e.target.value)
+  }
+
+  render() {
+    return (
+      <div className="select">
+        <select onChange={this.handleOnlySavedEventsInputChange} value={this.props.onlySavedEventsInputValue}>
+          <option value="">Saved & Unsaved Events</option>
+          <option value="saved">My Saved Events</option>
         </select>
       </div>
     )

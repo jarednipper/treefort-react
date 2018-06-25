@@ -29,6 +29,10 @@ class EventTable extends React.Component {
       events = events.filter(e => e.forts.includes(this.props.fortInputValue));
     }
 
+    if (this.props.onlySavedEvents.length) {
+      events = events.filter(e => this.props.mySavedEvents.includes(e.id));
+    }
+
     //sort by time, then name
     events = events.sort((a, b) => {
       if (a.start_time < b.start_time) return -1;
@@ -37,30 +41,13 @@ class EventTable extends React.Component {
       return (a.name < b.name) ? -1 : 1;
     });
 
-    // sort by sort_order_within_tier
-    // doesn't mix well between forts. need to sort additionally by fort
-    // events = events.sort((a, b) => {
-
-    //   if (!a.performers || !b.performers || !a.performers[0] || !b.performers[0]) {
-    //     return 0;
-    //   }
-
-    //   const aPerformer = this.props.performers.find(p => p.id === a.performers[0].id);
-    //   const bPerformer = this.props.performers.find(p => p.id === b.performers[0].id);
-
-    //   if (!aPerformer || !bPerformer) {
-    //     return 0;
-    //   }
-
-    //   return aPerformer.sort_order_within_tier < bPerformer.sort_order_within_tier ? -1 : 1;
-    // });
-
     return events;
   }
 
   render() {
     var rows = [];
 
+    // TODO this is dumb
     const hourNames = {
       0: 'Late',
       1: 'Late',
@@ -109,7 +96,7 @@ class EventTable extends React.Component {
         <EventRow
           key={event.id}
           event={event}
-          mySavedEvent={this.props.mySavedEvents.includes(event.id)}
+          isSaved={this.props.mySavedEvents.includes(event.id)}
           onAddSavedEvent={this.props.onAddSavedEvent}
           onRemoveSavedEvent={this.props.onRemoveSavedEvent}
         />
@@ -131,24 +118,34 @@ class EventTable extends React.Component {
   }
 }
 
+const dayNames = {
+  3: 'Wed',
+  4: 'Thu',
+  5: 'Fri',
+  6: 'Sat',
+  0: 'Sun',
+};
+
+const FormatTimeRow = (props) => (
+  `${dayNames[props.date.getDay()]} March ${props.date.getDate()}`
+)
+
 const TimeRow = (props) => (
   <tr style={{ backgroundColor: 'gold' }}>
     <td colSpan="4">
-      {props.event.start_time} {props.hourName}
+      <FormatTimeRow date={new Date(props.event.start_time)} /> {props.hourName}
     </td>
   </tr>
 )
 
 const SavedEventSection = (props) => (
   <td>
-    <input
-      type="checkbox"
-      checked={props.mySavedEvent}
-      onChange={(e) => e.target.checked
-        ? props.onAddSavedEvent(props.eventId)
-        : props.onRemoveSavedEvent(props.eventId)
-      }
-    />
+    <a
+      className={`button is-rounded ${props.isSaved ? 'is-primary' : ''}`}
+      onClick={() => props.isSaved ? props.onRemoveSavedEvent(props.eventId) : props.onAddSavedEvent(props.eventId)}
+    >
+      {props.isSaved ? 'Saved' : 'Save'}
+    </a>
   </td>
 )
 
@@ -157,11 +154,11 @@ const EventRow = (props) => (
     <td><a href={`event/${props.event.id}`}>{props.event.name}</a></td>
     <td>{props.event.start_time}</td>
     <td>{props.event.venue.name}</td>
-    <td>{props.mySavedEvent ? 'saved' : 'not saved'}</td>
     <SavedEventSection
       onAddSavedEvent={props.onAddSavedEvent}
       onRemoveSavedEvent={props.onRemoveSavedEvent}
       eventId={props.event.id}
+      isSaved={props.isSaved}
     />
   </tr>
 );

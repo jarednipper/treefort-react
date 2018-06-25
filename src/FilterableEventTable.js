@@ -10,12 +10,14 @@ class FilterableEventTable extends React.Component {
       genreInputValue: window.localStorage.getItem('genreInputValue') || '',
       venueInputValue: window.localStorage.getItem('venueInputValue') || '',
       fortInputValue: window.localStorage.getItem('fortInputValue') || '',
+      onlySavedEventsInputValue: window.localStorage.getItem('onlySavedEventsInputValue') || '',
     };
 
     this.handleEventInputChange = this.handleEventInputChange.bind(this);
     this.handleGenreInputChange = this.handleGenreInputChange.bind(this);
     this.handleVenueInputChange = this.handleVenueInputChange.bind(this);
     this.handleFortInputChange = this.handleFortInputChange.bind(this);
+    this.handleOnlySavedEventsChange = this.handleOnlySavedEventsChange.bind(this);
   }
 
   handleEventInputChange = (input) => {
@@ -36,6 +38,11 @@ class FilterableEventTable extends React.Component {
   handleFortInputChange = (input) => {
     this.setState({ fortInputValue: input });
     window.localStorage.setItem('fortInputValue', input);
+  }
+
+  handleOnlySavedEventsChange = (input) => {
+    this.setState({ onlySavedEventsInputValue: input });
+    window.localStorage.setItem('onlySavedEventsInputValue', input);
   }
 
   render() {
@@ -75,6 +82,9 @@ class FilterableEventTable extends React.Component {
             forts={forts}
             onFortInputChange={this.handleFortInputChange}
             fortInputValue={this.state.fortInputValue}
+
+            onOnlySavedEventsChange={this.handleOnlySavedEventsChange}
+            onlySavedEventsInputValue={this.state.onlySavedEventsInputValue}
           />
           <EventTable
             events={this.props.eventData}
@@ -86,6 +96,7 @@ class FilterableEventTable extends React.Component {
             mySavedEvents={this.props.mySavedEvents}
             onAddSavedEvent={this.props.onAddSavedEvent}
             onRemoveSavedEvent={this.props.onRemoveSavedEvent}
+            onlySavedEvents={this.state.onlySavedEventsInputValue}
           />
         </div>
       </div>
